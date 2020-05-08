@@ -1,3 +1,4 @@
+
 from tkinter import *
 import random
 import time
@@ -24,12 +25,22 @@ class Game:
         
     def mainloop(self):
         while 1:
+            g.c.create_text(365,10, text = 'Двері закриються через ' +str(round(120.00 - (time.time() - time1),2)) + ' секунд', font = ('Times', 12), tag = 'times')
             if self.running == True:
                 for sprite in self.sprites:
                     sprite.move()
             self.t.update_idletasks()
             self.t.update()
             time.sleep(0.01)
+            if time.time() - time1 > 120.00:
+                g.c.delete('times')
+                self.running = False
+                mb.showinfo("You Lost","Game Over")
+                break
+            if time.time() - time1 < 120.00:
+                g.c.delete('times')
+                g.c.create_text(365,10, text = 'Двері закриються через ' +str(round(120.00 - (time.time() - time1),2)) + ' секунд', font = ('Times', 12), tag = 'times')
+
 
 class Coords:
     def __init__(self, x1 = 0, y1 = 0, x2 = 0, y2 = 0):
@@ -152,6 +163,10 @@ class Stickman(Sprite):
             if self.y == 0:
                 self.game.c.itemconfig(self.image, \
                         image=self.image_stand)
+            elif self.y != 0:
+                self.game.c.itemconfig(self.image, \
+                        image=self.images_left[2])
+                
         if self.x < 0:
             if self.y != 0:
                 self.game.c.itemconfig(self.image, \
@@ -232,9 +247,8 @@ class Stickman(Sprite):
                 right = False
                 if sprite.end:
                     self.game.running = False
-                    time.sleep(0.5)
                     self.game.c.itemconfig(self.image, state='hidden')
-                    time.sleep(1)
+                    time.sleep(0.3)
                     sprite.cdoor()
                     mb.showinfo("Congratulations","You won")
         if falling and bottom and self.y == 0 and cord.y2 < self.game.c_height:
@@ -288,11 +302,10 @@ def collided_bottom(y, c1, c2):
 
     
 g = Game()
-start = False
+time1 = time.time()
 g.c.create_text(250, 250, text='Нажміть пробіл щоб почати гру', font= ('Times', 25), tag = 'txt_start')
 def startgame(event):
     if event.keysym == 'space':
-        print("l")
         g.c.delete('txt_start')
         plat1 = Platform(g, PhotoImage(file='platform2.gif'),\
             40, 480, 66, 10)
@@ -328,7 +341,8 @@ def startgame(event):
         g.sprites.append(plat10)
         g.sprites.append(stickman)
         g.sprites.append(door)
-        g.mainloop()    
+        g.mainloop()
+        
 g.c.bind_all('<KeyPress-space>', startgame)
 
    
