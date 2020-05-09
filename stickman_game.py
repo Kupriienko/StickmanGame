@@ -1,4 +1,3 @@
-
 from tkinter import *
 import random
 import time
@@ -22,10 +21,9 @@ class Game:
                 self.c.create_image(y*height, x*width, image = self.bg, anchor = "nw")
         self.sprites = []
         self.running = True
-        
     def mainloop(self):
         while 1:
-            g.c.create_text(365,10, text = 'Двері закриються через ' +str(round(120.00 - (time.time() - time1),2)) + ' секунд', font = ('Times', 12), tag = 'times')
+            g.c.create_text(365,10, text = 'Двері закриються через ' +str(round(120 - (time.time() - time1),2)) + ' секунд', font = ('semibold', 11), tag = 'times')
             if self.running == True:
                 for sprite in self.sprites:
                     sprite.move()
@@ -37,10 +35,13 @@ class Game:
                 self.running = False
                 mb.showinfo("You Lost","Game Over")
                 break
-            if time.time() - time1 < 120.00:
+            elif time.time() - time1 < 120.00 and self.running == True:
                 g.c.delete('times')
-                g.c.create_text(365,10, text = 'Двері закриються через ' +str(round(120.00 - (time.time() - time1),2)) + ' секунд', font = ('Times', 12), tag = 'times')
-
+                g.c.create_text(365,10, text = 'Двері закриються через ' +str(round(120 - (time.time() - time1),2)) + ' секунд', font = ('semibold', 11), tag = 'times')
+            elif self.running == False:
+                g.c.delete('times')
+                break
+                
 
 class Coords:
     def __init__(self, x1 = 0, y1 = 0, x2 = 0, y2 = 0):
@@ -255,7 +256,6 @@ class Stickman(Sprite):
             self.y = 4
         self.game.c.move(self.image, self.x, self.y)
 
-# Edited by Roman Petryk 01.05.2020
 def  within_x(c1, c2):
     if (c1.x1 > c2.x1 and c1.x1 < c2.x2) \
        or (c1.x2 > c2.x1 and c1.x2 < c2.x2)\
@@ -303,7 +303,7 @@ def collided_bottom(y, c1, c2):
     
 g = Game()
 time1 = time.time()
-g.c.create_text(250, 250, text='Нажміть пробіл щоб почати гру', font= ('Times', 25), tag = 'txt_start')
+g.c.create_text(250, 250, text='Нажміть пробіл щоб почати гру', font= ('Candara', 25, 'bold'), tag = 'txt_start')
 def startgame(event):
     if event.keysym == 'space':
         g.c.delete('txt_start')
